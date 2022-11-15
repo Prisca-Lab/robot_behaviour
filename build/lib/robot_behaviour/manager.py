@@ -1,28 +1,28 @@
 # coding=utf-8
 from eyes_reproducer import Eyes
 from gesture_reproducer import Gesture
-from speech_reproducer import Voice
+from speech_reproducer import Speech
 
+from abstract_behaviour import BehaviourMode
 
-class Robot:
+class PlayBehaviour:
     """
   This is a module to reproduce a robot action combining speech,
   eyes expression and gesture.
   """
 
-    def __init__(self, voice=None, gesture=None, eyes=None):
+    def __init__(self, modes = [BehaviourMode]):
         """
     :param voice:  instance of class Voice
     :param gesture: instance of class Gesture
     :param speech: instance of class Eyes
     """
+        self.modes = modes
+        # self.voice = voice
+        # self.gesture = gesture
+        # self.eyes = eyes
 
-        self.voice = voice
-        self.gesture = gesture
-        self.eyes = eyes
-
-    def reproduce_behaviour(self, sentence, gesture_name,
-                            eyes_expression_name):
+    def run(self):
         """
     it reproduces a complex robot behaviour by
     combining multi-modal interactions such as voice,
@@ -34,20 +34,23 @@ class Robot:
     eyes_expression_name: the name of the eyes expression
     """
 
-        self.voice.text_to_speech(sentence)
-        self.gesture.reproduce_motion(gesture_name)
-        self.eyes.reproduce_expression(eyes_expression_name)
+        for m in self.modes:
+            m.execute()
 
 
 def main():
-    voice = Voice("it_IT")
+    speech = Speech("it_IT")
     gesture = Gesture()
     eyes = Eyes()
-    robot = Robot(voice=voice, gesture=gesture, eyes=eyes)
-    sentence = "Ciao sono Antonio"
-    gesture_name = "nodding.yaml"
-    eyes_expression_name = "sad"
-    robot.reproduce_behaviour(sentence, gesture_name, eyes_expression_name)
+
+    modes = [speech, gesture, eyes]
+    behaviour = PlayBehaviour(modes)
+
+    speech.data = "Ciao sono Antonio"
+    gesture.data = "nodding.yaml"
+    eyes.data = "sad"
+
+    behaviour.run()
 
 
 if __name__ == "__main__":

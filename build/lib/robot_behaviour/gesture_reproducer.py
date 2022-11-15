@@ -13,8 +13,7 @@ class Gesture(BehaviourMode):
 
     def __init__(self):
         name = self.__class__.__name__
-        super().__init__(name)
-        # rospy.init_node(name, anonymous=True)
+        rospy.init_node(name, anonymous=True)
         self.client = SimpleActionClient('/play_motion', PlayMotionAction)
 
     def execute(self):
